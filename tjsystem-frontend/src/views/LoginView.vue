@@ -4,29 +4,29 @@
         <div class="container right-panel-active">
           <!-- 注册 -->
           <div class="container__form container--signup">
-            <form action="#" class="form" id="form1">
+            <form
+            class="form" 
+            id="form1"
+            ref="registerData">
               <h2 class="form__title">注 册</h2>
-              <input type="text" placeholder="用户名" class="input" />
-              <input type="password" placeholder="密码" class="input" />
-              <input type="password" placeholder="确认密码" class="input" />
-              <button class="btn">注 册</button>
+              <input type="text" placeholder="用户名" class="input" v-model="registerData.username"/>
+              <input type="password" placeholder="密码" class="input" v-model="registerData.password"/>
+              <input type="password" placeholder="确认密码" class="input" v-model="registerData.password_confirm"/>
+              <button class="btn" @click.prevent="register">注 册</button>
             </form>
           </div>
 
           <!-- 登录 -->
           <div class="container__form container--signin">
-            <form 
-            action="#" 
+            <form
             class="form" 
             id="form2" 
-            ref="loginData"
-            :model="loginData"
-            :rules="rules">
+            ref="loginData">
               <h2 class="form__title">登 录</h2>
-              <input type="text" placeholder="用户名" class="input" v-model="loginData.username" />
+              <input type="text" placeholder="用户名" class="input" v-model="loginData.username"/>
               <input type="password" placeholder="密码" class="input" v-model="loginData.password"/>
               <a href="#" class="link">忘记密码?</a>
-              <button class="btn" @click="loginCheck">登 录</button>
+              <button class="btn" @click.prevent="loginCheck">登 录</button>
             </form>
           </div>
 
@@ -48,7 +48,7 @@
   
 <script>
   import { setToken } from '@/utils/token'
-  import { login } from '@/api/user'
+  import { login,register } from '@/api/user'
   export default{
     name: 'LoginView',
     data() {
@@ -58,27 +58,12 @@
           username: '',
           password: ''
         },
-        loading: false,
-        rules: {
-          username: [
-            { required: true, message: "请输入用户名", trigger: "blur" },
-            {
-              min: 1,
-              max: 10,
-              message: "长度在 1 到 10 个字符",
-              trigger: "blur",
-            },
-          ],
-          password: [
-            { required: true, message: "请输入密码", trigger: "blur" },
-            {
-              min: 1,
-              max: 10,
-              message: "长度在 1 到 10 个字符",
-              trigger: "blur",
-            },
-          ]
+        registerData:{
+          username: '',
+          password: '',
+          password_confirm: ''
         },
+        loading: false,
       };
     },
     methods:{
@@ -90,29 +75,61 @@
         const container = document.querySelector(".container");
         container.classList.add("right-panel-active");
       },
-      loginCheck(){
-          this.$refs.loginData.validate(valid => {
-            if (valid) {
-              this.loading = true
-              
-              //调用登录后端接口
-              login(this.loginData).then((result) => {
-                console.log(result)
-                if (result.data.code == 1) {
-                  setToken(result.data.data);
-                  console.log('login success');
-                  this.$router.push('/home');
-                } else {
-                  this.$message.error(result.data.msg);
-                  this.loading = false
-                }
-              });
-            } else {
-              console.log('error submit!!')
-              return false
-            }
-        })
+      myRegisterValiate(){
+        if(this.registerData.username === ''){
+          this.$message.error("请输入用户名！")
+          return false;
+        }
+        else if(this.registerData.password === ''){
+          this.$message.error("请输入密码！")
+          return false;
+        }
+        else if(this.registerData.password_confirm === ''){
+          this.$message.error("请确认密码！")
+          return false;
+        }
+        else if(this.registerData.password !== this.registerData.password_confirm){
+          this.$message.error("两次输入的密码不一致！")
+          return false;
+        }
+        else{
+          return true;
+        }
       },
+      loginCheck(){
+        this.loading = true      
+        //调用登录后端接口
+        login(this.loginData).then((result) => {
+          console.log(result)
+          if (result.data.code === 1) {
+            setToken(result.data.data);
+            console.log('login success');
+            this.$message.success(result.data.msg);
+            this.$router.push('/home');
+          } else {
+            this.$message.error(result.data.msg);
+            this.loading = false
+          }
+        });
+      },
+      register(){
+        if(this.myRegisterValiate()){
+          register(this.registerData).then((result) => {
+            console.log(result)
+            if (result.data.code === 1) {
+              console.log('register success');
+              this.$message.success(result.data.msg);
+              this.registerData.username='';
+              this.registerData.password='';
+              this.registerData.password_confirm='';
+              this.signInClick();
+            } else {
+              this.$message.error(result.data.msg);
+              this.loading = false
+            }
+          });
+        }
+      }
     }
   }
 
@@ -225,7 +242,7 @@
 
   .overlay {
     background-color: var(--lightblue);
-    background: url("https://res.cloudinary.com/dci1eujqw/image/upload/v1616769558/Codepen/waldemar-brandt-aThdSdgx0YM-unsplash_cnq4sb.jpg");
+    background: url("../assets/login.jpg");
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;

@@ -15,8 +15,8 @@ public class LoginCheckInterceptor implements HandlerInterceptor{
         System.out.println("preHandle...");
 
         //1.判断请求是否是登录请求，如果是，直接放行
-        String url=request.getRequestURI().toString();
-        System.out.println(url);
+        String url= request.getRequestURI();
+        System.out.println("url："+url);
         if(url.contains("/login")){
             return true;
         }

@@ -4,17 +4,17 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   redirect:'/login' //表示重定向到/emp即可
-  // },
+  {
+    path: '/',
+    redirect:'/login' //表示重定向到/login
+  },
   {
     path: '/login',  //地址hash
     name: 'login',
     component:  () => import('../views/LoginView.vue')  //对应的vue组件
   },
   {
-    path: '/',  //地址hash
+    path: '/home',  //地址hash
     name: 'home',
     component:  () => import('../views/HomeView.vue')  //对应的vue组件
   },

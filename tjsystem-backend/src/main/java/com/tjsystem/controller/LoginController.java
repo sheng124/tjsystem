@@ -18,11 +18,11 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public Result loginJudge(@RequestBody User user){
+    public Result loginCheck(@RequestBody User user){
         //调用Service获取查询结果
-        System.out.println(user);
+        System.out.println("获取到的数据："+user);
         User u=loginService.loginJudge(user);
-        System.out.println(u);
+        System.out.println("Service处理的结果："+u);
         //登录成功，发放令牌
         if(u!=null){
             Map<String, Object> claims = new HashMap<>();
@@ -30,7 +30,7 @@ public class LoginController {
             claims.put("username",u.getUsername());
             claims.put("password",u.getPassword());
             String jwt = JwtAndLoginUtils.generateJwt(claims);
-            System.out.println(jwt);
+            System.out.println("令牌："+jwt);
             return Result.success(jwt);
         }
         //登录失败，返回错误信息

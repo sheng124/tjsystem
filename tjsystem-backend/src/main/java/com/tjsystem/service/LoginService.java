@@ -4,5 +4,5 @@ import com.tjsystem.pojo.User;
 
 public interface LoginService {
 
-    public User loginJudge(User user);
+    User loginJudge(User user);
 }
