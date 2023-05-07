@@ -42,4 +42,8 @@ public class User {
     void testGit(){
         System.out.println("version-02");
     }
+
+    void testGitPull(){
+        System.out.println("version-02");
+    }
 }
