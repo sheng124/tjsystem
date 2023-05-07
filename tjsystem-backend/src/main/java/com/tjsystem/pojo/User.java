@@ -38,12 +38,4 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
-
-    void testGit(){
-        System.out.println("version-03");
-    }
-
-    void testGitPull(){
-        System.out.println("version-02");
-    }
 }
