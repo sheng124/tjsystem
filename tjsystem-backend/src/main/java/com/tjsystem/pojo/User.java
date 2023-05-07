@@ -40,6 +40,6 @@ public class User {
     }
 
     void testGit(){
-        System.out.println("version-01");
+        System.out.println("version-02");
     }
 }
